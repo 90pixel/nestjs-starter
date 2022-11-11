@@ -19,8 +19,10 @@ export class UsersService {
     });
   }
 
-  async findMeById(id: number): Promise<MeResponseDto> {
-    const result = await this.usersRepository.findOne({ where: { id: id } });
+  async findMeBySalt(salt: string): Promise<MeResponseDto> {
+    const result = await this.usersRepository.findOne({
+      where: { salt: salt },
+    });
     return new MeResponseDto(result);
   }
 
@@ -39,6 +41,7 @@ export class UsersService {
     const newUser = new User();
     newUser.username = registerInfo.username;
     newUser.password = await bcrypt.hash(registerInfo.password, 10);
+    newUser.salt = await bcrypt.genSalt();
     return await this.usersRepository.save(newUser);
   }
 }

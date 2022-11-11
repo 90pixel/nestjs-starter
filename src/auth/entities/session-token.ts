@@ -15,7 +15,7 @@ export class SessionToken {
   id: number;
 
   @Index({ unique: true })
-  @Column()
+  @Column({ length: 500 })
   accessToken: string;
 
   @Column()

@@ -44,14 +44,8 @@ export class AuthController {
 
   //get access token
   @Get('getAccessToken/:refreshToken')
-  async getAccessToken(
-    @Req() req,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    @Param('refreshToken') refreshToken: string,
-  ) {
-    const response = await this.authService.getAccessToken(
-      req.params['refreshToken'],
-    );
+  async getAccessToken(@Param('refreshToken') refreshToken: string) {
+    const response = await this.authService.getAccessToken(refreshToken);
     return new ResponseDto(
       response,
       'Access token retrieved',

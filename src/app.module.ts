@@ -27,6 +27,7 @@ const ENV = process.env.NODE_ENV ?? 'dev';
       autoLoadEntities: true,
       keepConnectionAlive: true,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      subscribers: [__dirname + '/**/*.subscriber{.ts,.js}'],
       // logging: process.env.NODE_ENV !== 'prod',
     }),
 

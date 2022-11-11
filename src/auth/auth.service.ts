@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
@@ -27,9 +23,7 @@ export class AuthService {
     const user = await this.usersService.checkAuth(loginInfo);
     if (!user) throw new UnauthorizedException('Invalid credentials');
     const payload = {
-      username: loginInfo.username,
-      sub: user.id,
-      createdAt: user.createdAt.toISOString(),
+      sub: user.salt,
     };
     return await this.createToken(user, payload);
   }
@@ -70,9 +64,7 @@ export class AuthService {
     const user = await Promise.resolve(sessionToken.user);
 
     const payload = {
-      username: user.username,
-      sub: user.id,
-      createdAt: user.createdAt.toISOString(),
+      sub: user.salt,
     };
     return this.createToken(user, payload);
   }
@@ -120,22 +112,18 @@ export class AuthService {
   }
 
   async generateRefreshToken(): Promise<string> {
-    return crypto.randomBytes(64).toString('hex');
+    return crypto.randomBytes(32).toString('hex');
   }
 
   async validateAccessToken(accessToken: string): Promise<User> {
-    try {
-      const payload = this.jwtService.verify(accessToken);
-      const token = await this.sessionTokenRepository.find({
-        where: { accessToken: accessToken, expiresAt: MoreThan(new Date()) },
-      });
-      if (!token) throw new UnauthorizedException('Invalid access token');
-      const user = await Promise.resolve(token[0].user);
-      if (user.salt !== payload.sub)
-        throw new UnauthorizedException('Invalid access token');
-      return user;
-    } catch (error) {
-      throw new BadRequestException('Invalid access token');
-    }
+    const payload = this.jwtService.verify(accessToken);
+    const token = await this.sessionTokenRepository.find({
+      where: { accessToken: accessToken, expiresAt: MoreThan(new Date()) },
+    });
+    if (!token) throw new UnauthorizedException('Invalid access token');
+    const user = await Promise.resolve(token[0].user);
+    if (user.salt !== payload.sub)
+      throw new UnauthorizedException('Invalid access token');
+    return user;
   }
 }

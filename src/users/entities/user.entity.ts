@@ -29,7 +29,8 @@ export class User {
   @CreateDateColumn()
   createdAt: Date;
 
-  @Column({ nullable: true })
+  @Index()
+  @Column()
   salt: string;
 
   @UpdateDateColumn()
