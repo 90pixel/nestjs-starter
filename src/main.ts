@@ -2,9 +2,17 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    new FastifyAdapter(),
+  );
+
   app.setGlobalPrefix('api');
 
   //validation class
@@ -22,8 +30,8 @@ async function bootstrap() {
       bearerFormat: 'JWT',
       in: 'header',
     })
-    .setTitle('Live API')
-    .setDescription('Corpeo Live API')
+    .setTitle('API DOCUMENT')
+    .setDescription('API DOCUMENT')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
@@ -40,5 +48,9 @@ async function bootstrap() {
 }
 
 bootstrap().then((r) =>
-  console.log('Server started ' + new Date().toLocaleString()),
+  console.log(
+    'Server started ' +
+      new Date().toLocaleString() +
+      ' "http://localhost:5656/api" ',
+  ),
 );

@@ -10,10 +10,10 @@ import {
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { ResponseDto } from '../helpers/dto/response.dto';
+import { ResponseDto } from '../common/dto/response.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { Roles } from './lib/roles.decorator';
-import { Role } from '../helpers/enums/role.enum';
+import { Role } from '../common/enums/role.enum';
 
 @Controller('auth')
 @ApiBearerAuth()
@@ -46,6 +46,7 @@ export class AuthController {
   @Get('getAccessToken/:refreshToken')
   async getAccessToken(
     @Req() req,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     @Param('refreshToken') refreshToken: string,
   ) {
     const response = await this.authService.getAccessToken(

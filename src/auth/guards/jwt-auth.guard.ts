@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Reflector } from '@nestjs/core';
-import { Role } from '../../helpers/enums/role.enum';
+import { Role } from '../../common/enums/role.enum';
 import { ROLES_KEY } from '../lib/roles.decorator';
 
 @Injectable()

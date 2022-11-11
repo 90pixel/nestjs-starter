@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Role } from '../../helpers/enums/role.enum';
+import { Role } from '../../common/enums/role.enum';
 import { SessionToken } from '../../auth/entities/session-token';
 
 @Entity()
@@ -29,10 +29,15 @@ export class User {
   @CreateDateColumn()
   createdAt: Date;
 
+  @Column({ nullable: true })
+  salt: string;
+
   @UpdateDateColumn()
   updatedAt: Date;
 
   //one to many session
-  @OneToMany((type) => SessionToken, (sessionToken) => sessionToken.user)
+  @OneToMany(() => SessionToken, (sessionToken) => sessionToken.user, {
+    cascade: true,
+  })
   sessionTokens: Promise<SessionToken[]>;
 }

@@ -18,16 +18,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(request: any, payload: any) {
+  async validate(request: any) {
     let accessToken =
       request.headers.authorization ?? request.query['access-token'];
     accessToken = accessToken?.replace('Bearer ', '');
 
     const user = await this.authService.validateAccessToken(accessToken);
     return {
-      id: payload.sub,
-      username: payload.username,
-      createdAt: payload.createdAt,
+      id: user.id,
+      username: user.username,
+      createdAt: user.createdAt,
       roles: user.role,
     };
   }

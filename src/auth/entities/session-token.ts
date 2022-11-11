@@ -33,6 +33,8 @@ export class SessionToken {
   updatedAt: Date;
 
   //one to many user
-  @ManyToOne((type) => User, (user) => user.sessionTokens)
+  @ManyToOne(() => User, (user) => user.sessionTokens, {
+    onDelete: 'CASCADE',
+  })
   user: Promise<User>;
 }
