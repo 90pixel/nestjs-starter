@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Role } from '../../helpers/enums/role.enum';
+import { Role } from '../../common/enums/role.enum';
 import { SessionToken } from '../../auth/entities/session-token';
 
 @Entity()
@@ -28,6 +28,9 @@ export class User {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @Column({ nullable: true })
+  salt: string;
 
   @UpdateDateColumn()
   updatedAt: Date;

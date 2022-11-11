@@ -83,9 +83,7 @@ export class AuthService {
     if (user) throw new UnauthorizedException('User already exist');
     const createdUser = await this.usersService.create(registerInfo);
     const payload = {
-      username: registerInfo.username,
-      sub: createdUser.id,
-      createdAt: createdUser.createdAt.toISOString(),
+      sub: createdUser.salt,
     };
 
     return await this.createToken(createdUser, payload);
@@ -133,7 +131,7 @@ export class AuthService {
       });
       if (!token) throw new UnauthorizedException('Invalid access token');
       const user = await Promise.resolve(token[0].user);
-      if (user.id !== payload.sub)
+      if (user.salt !== payload.sub)
         throw new UnauthorizedException('Invalid access token');
       return user;
     } catch (error) {
