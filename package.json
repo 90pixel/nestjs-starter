@@ -1,8 +1,8 @@
 {
-  "name": "corpeo-live-server",
+  "name": "nestjs-starter",
   "private": true,
   "version": "1.0.0",
-  "description": "Corpeo Live Server Backend",
+  "description": "Nestjs Starter Kit",
   "license": "MIT",
   "scripts": {
     "build": "nest build",
