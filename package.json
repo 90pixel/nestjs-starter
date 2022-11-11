@@ -13,11 +13,11 @@
     "start:local": "NODE_ENV=local nest start --debug --watch",
     "start:prod": "node dist/main NODE_ENV=prod",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test": "NODE_ENV=local jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
     "@fastify/static": "^6.5.0",
