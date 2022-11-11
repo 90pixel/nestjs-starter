@@ -33,6 +33,8 @@ export class User {
   updatedAt: Date;
 
   //one to many session
-  @OneToMany((type) => SessionToken, (sessionToken) => sessionToken.user)
+  @OneToMany(() => SessionToken, (sessionToken) => sessionToken.user, {
+    cascade: true,
+  })
   sessionTokens: Promise<SessionToken[]>;
 }

@@ -22,8 +22,8 @@ async function bootstrap() {
       bearerFormat: 'JWT',
       in: 'header',
     })
-    .setTitle('Live API')
-    .setDescription('Corpeo Live API')
+    .setTitle('API DOCUMENT')
+    .setDescription('API DOCUMENT')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
@@ -40,5 +40,9 @@ async function bootstrap() {
 }
 
 bootstrap().then((r) =>
-  console.log('Server started ' + new Date().toLocaleString()),
+  console.log(
+    'Server started ' +
+      new Date().toLocaleString() +
+      ' "http://localhost:5656/api" ',
+  ),
 );
