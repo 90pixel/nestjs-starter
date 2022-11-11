@@ -25,7 +25,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     const user = await this.authService.validateAccessToken(accessToken);
     return {
-      userId: payload.sub,
+      id: payload.sub,
       username: payload.username,
       createdAt: payload.createdAt,
       roles: user.role,

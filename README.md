@@ -58,7 +58,7 @@ Using the Roles decorator, you can specify the user roles that can access those 
 @Roles(Role.Admin, Role.User)
   @Get('me')
   async getProfile(@Req() req) {
-    const response = await this.usersService.findMeById(req.user.userId);
+    const response = await this.usersService.findMeById(req.user.id);
     return new ResponseDto(response);
   }
 ```
