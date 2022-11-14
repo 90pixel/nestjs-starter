@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpStatus,
-  Param,
-  Post,
-  Req,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -46,10 +38,6 @@ export class AuthController {
   @Get('getAccessToken/:refreshToken')
   async getAccessToken(@Param('refreshToken') refreshToken: string) {
     const response = await this.authService.getAccessToken(refreshToken);
-    return new ResponseDto(
-      response,
-      'Access token retrieved',
-      HttpStatus.BAD_REQUEST,
-    );
+    return new ResponseDto(response, 'Access token retrieved');
   }
 }

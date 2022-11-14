@@ -23,7 +23,7 @@ export class AuthService {
     const user = await this.usersService.checkAuth(loginInfo);
     if (!user) throw new UnauthorizedException('Invalid credentials');
     const payload = {
-      sub: user.salt,
+      sub: user.sub,
     };
     return await this.createToken(user, payload);
   }
@@ -64,7 +64,7 @@ export class AuthService {
     const user = await Promise.resolve(sessionToken.user);
 
     const payload = {
-      sub: user.salt,
+      sub: user.sub,
     };
     return this.createToken(user, payload);
   }
@@ -75,7 +75,7 @@ export class AuthService {
     if (user) throw new UnauthorizedException('User already exist');
     const createdUser = await this.usersService.create(registerInfo);
     const payload = {
-      sub: createdUser.salt,
+      sub: createdUser.sub,
     };
 
     return await this.createToken(createdUser, payload);
@@ -116,14 +116,18 @@ export class AuthService {
   }
 
   async validateAccessToken(accessToken: string): Promise<User> {
-    const payload = this.jwtService.verify(accessToken);
-    const token = await this.sessionTokenRepository.find({
-      where: { accessToken: accessToken, expiresAt: MoreThan(new Date()) },
-    });
-    if (!token) throw new UnauthorizedException('Invalid access token');
-    const user = await Promise.resolve(token[0].user);
-    if (user.salt !== payload.sub)
+    try {
+      const payload = this.jwtService.verify(accessToken);
+      const token = await this.sessionTokenRepository.find({
+        where: { accessToken: accessToken, expiresAt: MoreThan(new Date()) },
+      });
+      if (!token) throw new UnauthorizedException('Invalid access token');
+      const user = await Promise.resolve(token[0].user);
+      if (user.sub !== payload.sub)
+        throw new UnauthorizedException('Invalid access token');
+      return user;
+    } catch (e) {
       throw new UnauthorizedException('Invalid access token');
-    return user;
+    }
   }
 }

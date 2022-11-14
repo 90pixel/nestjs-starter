@@ -14,7 +14,7 @@ export class UsersController {
   @Get('me')
   async getProfile(@Req() req) {
     console.log(req.user);
-    const response = await this.usersService.findMeBySalt(req.user.sub);
+    const response = await this.usersService.findMeBySub(req.user.sub);
     return new ResponseDto(response);
   }
 }

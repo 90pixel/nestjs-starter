@@ -19,9 +19,9 @@ export class UsersService {
     });
   }
 
-  async findMeBySalt(salt: string): Promise<MeResponseDto> {
+  async findMeBySub(sub: string): Promise<MeResponseDto> {
     const result = await this.usersRepository.findOne({
-      where: { salt: salt },
+      where: { sub: sub },
     });
     return new MeResponseDto(result);
   }
@@ -40,8 +40,12 @@ export class UsersService {
   async create(registerInfo: RegisterDto): Promise<User> {
     const newUser = new User();
     newUser.username = registerInfo.username;
-    newUser.password = await bcrypt.hash(registerInfo.password, 10);
     newUser.salt = await bcrypt.genSalt();
+    newUser.password = await bcrypt.hash(registerInfo.password, newUser.salt);
+    await this.usersRepository.save(newUser);
+
+    //sub is the unique identifier of the user timestamp+ userid
+    newUser.sub = newUser.createdAt.getTime() + newUser.id.toString();
     return await this.usersRepository.save(newUser);
   }
 }

@@ -15,6 +15,10 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Index()
+  @Column({ nullable: true, default: null })
+  sub: string;
+
   @Index({ unique: true })
   @Column()
   username: string;
