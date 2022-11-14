@@ -17,4 +17,9 @@ export class UsersController {
     const response = await this.usersService.findMeBySub(req.user.sub);
     return new ResponseDto(response);
   }
+
+  @Get('all')
+  async findAll() {
+    return await this.usersService.paginateAll();
+  }
 }

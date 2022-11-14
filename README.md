@@ -134,4 +134,33 @@ be used
 
 More info: https://orkhan.gitbook.io/typeorm/docs/eager-and-lazy-relations#lazy-relations
 
+### Pagination class
+
+Pagination works can sometimes be confused. Added pagination class for convenience. You can take a look at the comment
+lines in the example below.
+
+```
+async paginateAll() {
+    //create pagination object
+    const pagination = new PagePaginator();
+    //
+    return await pagination.paginate(
+        //identify your table to use
+      this.usersRepository.createQueryBuilder(),
+      {
+        //default is 1
+        page: 1,
+        //default is 10
+        take: 3,
+        //true for asc, false for desc, default is id desc
+        orderBy: { id: false },
+        //you can use typeorm where clause
+        where: { id: MoreThan(0) },
+        //add relations if you want take them too
+        relations: ['sessionTokens'],
+      },
+    );
+  }
+```
+
   

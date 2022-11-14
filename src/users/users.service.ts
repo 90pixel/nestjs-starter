@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { LoginDto } from '../auth/dto/login.dto';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto } from '../auth/dto/register.dto';
 import { MeResponseDto } from './dto/me.response.dto';
+import { PagePaginator } from '../common/helpers/page-paginator';
 
 @Injectable()
 export class UsersService {
@@ -35,6 +36,28 @@ export class UsersService {
       return user;
     }
     return null;
+  }
+
+  async paginateAll() {
+    //create pagination object
+    const pagination = new PagePaginator();
+    //
+    return await pagination.paginate(
+      //identify your table to use
+      this.usersRepository.createQueryBuilder(),
+      {
+        //default is 1
+        page: 1,
+        //default is 10
+        take: 3,
+        //true for asc, false for desc, default is id desc
+        orderBy: { id: false },
+        //you can use typeorm where clause
+        where: { id: MoreThan(0) },
+        //add relations if you want take them too
+        relations: ['sessionTokens'],
+      },
+    );
   }
 
   async create(registerInfo: RegisterDto): Promise<User> {
