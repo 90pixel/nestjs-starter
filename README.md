@@ -19,6 +19,7 @@ starter kit.
 - [x] Validation setted up and contains sample codes
 - [x] Response Format
 - [x] Access token, username are indexed for quick access
+- [x] Pagination
 
 ## Installation
 
