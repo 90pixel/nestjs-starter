@@ -72,9 +72,7 @@ All remaining functions are public. You don't need to use @public decorator.
 You can return responseDto when returning data in the controller to have a uniform response format
 
 ```typescript
-const response = await this.authService.getAccessToken(
-  req.params['refreshToken'],
-);
+const response = await this.authService.getAccessToken(refreshToken);
 return new ResponseDto(response, 'Access token retrieved');
 ```
 
