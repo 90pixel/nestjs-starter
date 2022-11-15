@@ -43,7 +43,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     //this.role is contains user.role
     if (this.roles && this.roles.length) {
       const hasRole = () =>
-        this.roles.some((role) => user.roles?.includes(role));
+        this.roles.some((role) => user.role?.includes(role));
 
       if (!hasRole()) {
         throw new ForbiddenException(

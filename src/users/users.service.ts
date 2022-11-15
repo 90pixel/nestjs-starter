@@ -5,7 +5,6 @@ import { MoreThan, Repository } from 'typeorm';
 import { LoginDto } from '../auth/dto/login.dto';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto } from '../auth/dto/register.dto';
-import { MeResponseDto } from './dto/me.response.dto';
 import { PagePaginator } from '../common/helpers/page-paginator';
 
 @Injectable()
@@ -18,13 +17,6 @@ export class UsersService {
     return await this.usersRepository.findOne({
       where: { username: username },
     });
-  }
-
-  async findMeBySub(sub: string): Promise<MeResponseDto> {
-    const result = await this.usersRepository.findOne({
-      where: { sub: sub },
-    });
-    return new MeResponseDto(result);
   }
 
   async checkAuth(loginInfos: LoginDto): Promise<User> {

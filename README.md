@@ -10,6 +10,7 @@ starter kit.
 - [x] Refresh token operations
 - [x] Session verify and token management from database
 - [x] Logout function for killing session
+- [x] CurrentUser decorator
 - [x] Mysql connection (another driver can be used easily)
 - [x] Auto load & sync entities
 - [x] Eslint

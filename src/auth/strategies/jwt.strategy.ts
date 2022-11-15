@@ -24,9 +24,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     accessToken = accessToken?.replace('Bearer ', '');
 
     const user = await this.authService.validateAccessToken(accessToken);
-    return {
-      sub: user.sub,
-      roles: user.role,
-    };
+    return user;
   }
 }
