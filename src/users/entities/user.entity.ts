@@ -44,5 +44,5 @@ export class User {
   @OneToMany(() => SessionToken, (sessionToken) => sessionToken.user, {
     cascade: true,
   })
-  sessionTokens: Promise<SessionToken[]>;
+  sessionTokens: SessionToken[];
 }

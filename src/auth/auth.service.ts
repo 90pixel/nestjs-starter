@@ -49,6 +49,7 @@ export class AuthService {
         refreshToken: refreshToken,
         expiresRefreshAt: MoreThan(new Date()),
       },
+      relations: ['user'],
     });
 
     if (!sessionToken) {
@@ -61,12 +62,10 @@ export class AuthService {
     //update session token
     await this.sessionTokenRepository.save(sessionToken);
 
-    const user = await Promise.resolve(sessionToken.user);
-
     const payload = {
-      sub: user.sub,
+      sub: sessionToken.user.sub,
     };
-    return this.createToken(user, payload);
+    return this.createToken(sessionToken.user, payload);
   }
 
   async register(registerInfo: RegisterDto): Promise<LoginResponseDto> {
@@ -101,7 +100,7 @@ export class AuthService {
     response.expiresRefreshAt = expiresRefreshAtDate;
 
     const sessionToken = new SessionToken();
-    sessionToken.user = Promise.resolve(user);
+    sessionToken.user = user;
     sessionToken.accessToken = response.accessToken;
     sessionToken.expiresAt = response.expiresAt;
     sessionToken.refreshToken = response.refreshToken;
@@ -118,14 +117,15 @@ export class AuthService {
   async validateAccessToken(accessToken: string): Promise<User> {
     try {
       const payload = this.jwtService.verify(accessToken);
-      const token = await this.sessionTokenRepository.find({
+      const token = await this.sessionTokenRepository.findOne({
         where: { accessToken: accessToken, expiresAt: MoreThan(new Date()) },
+        relations: ['user'],
       });
       if (!token) throw new UnauthorizedException('Invalid access token');
-      const user = await Promise.resolve(token[0].user);
-      if (user.sub !== payload.sub)
+
+      if (token.user.sub !== payload.sub)
         throw new UnauthorizedException('Invalid access token');
-      return user;
+      return token.user;
     } catch (e) {
       throw new UnauthorizedException('Invalid access token');
     }

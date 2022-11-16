@@ -36,5 +36,5 @@ export class SessionToken {
   @ManyToOne(() => User, (user) => user.sessionTokens, {
     onDelete: 'CASCADE',
   })
-  user: Promise<User>;
+  user: User;
 }
