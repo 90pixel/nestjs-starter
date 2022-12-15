@@ -21,6 +21,8 @@
 .idea/**/gradle.xml
 .idea/**/libraries
 
+# Envoriment
+.local.env
 # CMake
 cmake-build-debug/
 
