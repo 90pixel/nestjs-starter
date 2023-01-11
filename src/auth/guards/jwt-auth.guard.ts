@@ -17,6 +17,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     super();
   }
 
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   canActivate(context: ExecutionContext) {
     // Add your custom authentication logic here
     // for example, call super.logIn(request) to establish a session.
@@ -35,6 +36,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     return super.canActivate(context);
   }
 
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   handleRequest(err, user) {
     if (err || !user) {
       throw err || new UnauthorizedException('You should login first');

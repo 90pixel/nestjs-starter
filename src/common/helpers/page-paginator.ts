@@ -1,6 +1,7 @@
 import { OrderBy, PagePagination } from './interfaces/paginator';
 import { SelectQueryBuilder } from 'typeorm';
 import { normalizeOrderBy } from '../utils/normalize-order';
+import { PaginatorResponse } from './paginator-response.dto';
 
 export interface PagePaginatorPaginateParams<
   TEntity,
@@ -60,13 +61,13 @@ export class PagePaginator<
       },
     );
 
-    return {
-      totalCount: await qbForCount.getCount(),
-      totalPages: Math.ceil((await qbForCount.getCount()) / take),
-      currentPage: page,
-      takeSize: take,
-      hasNext,
-      nodes,
-    };
+    const response = new PaginatorResponse();
+    response.totalCount = await qbForCount.getCount();
+    response.totalPages = Math.ceil(response.totalCount / take);
+    response.currentPage = page;
+    response.takeSize = take;
+    response.hasNext = hasNext;
+    response.nodes = nodes;
+    return response;
   }
 }

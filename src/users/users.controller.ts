@@ -6,6 +6,7 @@ import { UsersService } from './users.service';
 import { ResponseDto } from '../common/dto/response.dto';
 import { CurrentUser } from '../auth/lib/current-user';
 import { User } from './entities/user.entity';
+import { PaginatorResponse } from '../common/helpers/paginator-response.dto';
 
 @Controller('users')
 @ApiBearerAuth()
@@ -14,12 +15,12 @@ export class UsersController {
 
   @Roles(Role.Admin, Role.User)
   @Get('me')
-  async getProfile(@CurrentUser() user: User) {
+  async getProfile(@CurrentUser() user: User): Promise<ResponseDto> {
     return new ResponseDto(user);
   }
 
   @Get('all')
-  async findAll() {
+  async findAll(): Promise<PaginatorResponse> {
     return await this.usersService.paginateAll();
   }
 }

@@ -6,6 +6,7 @@ import { LoginDto } from '../auth/dto/login.dto';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto } from '../auth/dto/register.dto';
 import { PagePaginator } from '../common/helpers/page-paginator';
+import { PaginatorResponse } from '../common/helpers/paginator-response.dto';
 
 @Injectable()
 export class UsersService {
@@ -30,7 +31,7 @@ export class UsersService {
     return null;
   }
 
-  async paginateAll() {
+  async paginateAll(): Promise<PaginatorResponse> {
     //create pagination object
     const pagination = new PagePaginator();
     //

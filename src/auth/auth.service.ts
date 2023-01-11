@@ -19,7 +19,7 @@ export class AuthService {
     private sessionTokenRepository: Repository<SessionToken>,
   ) {}
 
-  async login(loginInfo: LoginDto) {
+  async login(loginInfo: LoginDto): Promise<LoginResponseDto> {
     const user = await this.usersService.checkAuth(loginInfo);
     if (!user) throw new UnauthorizedException('Invalid credentials');
     const payload = {
@@ -28,7 +28,7 @@ export class AuthService {
     return await this.createToken(user, payload);
   }
 
-  async logout(accessToken: string) {
+  async logout(accessToken: string): Promise<void> {
     const sessionToken = await this.sessionTokenRepository.findOne({
       where: { accessToken: accessToken },
     });

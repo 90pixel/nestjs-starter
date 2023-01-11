@@ -13,20 +13,20 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  async login(@Body() loginInfo: LoginDto) {
+  async login(@Body() loginInfo: LoginDto): Promise<ResponseDto> {
     const response = await this.authService.login(loginInfo);
     return new ResponseDto(response);
   }
 
   @Post('register')
-  async register(@Body() registerInfo: RegisterDto) {
+  async register(@Body() registerInfo: RegisterDto): Promise<ResponseDto> {
     const response = await this.authService.register(registerInfo);
     return new ResponseDto(response);
   }
 
   @Roles(Role.User, Role.Admin)
   @Get('logout')
-  async logout(@Req() req) {
+  async logout(@Req() req): Promise<ResponseDto> {
     let accessToken = req.headers.authorization ?? req.query['access-token'];
     //remove bearer from token
     accessToken = accessToken.replace('Bearer ', '');
@@ -36,7 +36,9 @@ export class AuthController {
 
   //get access token
   @Get('getAccessToken/:refreshToken')
-  async getAccessToken(@Param('refreshToken') refreshToken: string) {
+  async getAccessToken(
+    @Param('refreshToken') refreshToken: string,
+  ): Promise<ResponseDto> {
     const response = await this.authService.getAccessToken(refreshToken);
     return new ResponseDto(response, 'Access token retrieved');
   }
