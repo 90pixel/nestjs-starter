@@ -8,12 +8,10 @@ import { UsersModule } from './users/users.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 
-const ENV = process.env.NODE_ENV ?? 'dev';
-
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: ENV + '.env',
+      envFilePath: `.env.${process.env.NODE_ENV ?? 'dev'}`,
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
