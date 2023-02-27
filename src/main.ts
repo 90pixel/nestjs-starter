@@ -48,7 +48,7 @@ async function bootstrap(): Promise<void> {
   await app.listen(5656);
 }
 
-bootstrap().then((r) =>
+bootstrap().then(() =>
   console.log(
     'Server started ' +
       new Date().toLocaleString() +

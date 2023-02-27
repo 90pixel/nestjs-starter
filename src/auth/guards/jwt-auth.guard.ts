@@ -44,6 +44,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
     //this.role is contains user.role
     if (this.roles && this.roles.length) {
+      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       const hasRole = () =>
         this.roles.some((role) => user.role?.includes(role));
 
