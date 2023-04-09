@@ -25,12 +25,12 @@ starter kit.
 
 ## Installation
 
-The project is using the current lts version node.js 18.14.2 and nestjs 9.3.9.
-First of all, if you have nvm, let's make sure you are using version 18.14.2
+The project is using the current lts version node.js 18.15.0 and nestjs 9.3.12.
+First of all, if you have nvm, let's make sure you are using version 18.15.0
 
 ```bash 
-  nvm install 18.14.2
-  nvm use 18.14.2
+  nvm install 18.15.0
+  nvm use 18.15.0
 ```
 
 To install all packages
@@ -203,7 +203,7 @@ export class MeResponseDto {
 await this.utilsService.autoMapper(getUser, MeResponseDto)
 ```
 
-Your response will be contains only id, username, role, test and sessionTokens. We use class-validator and class-transformer for this. Because typescript cannot reflect the type of the dto props. So we use class-transformer for resolve this problem.
+Your response will contains only id, username, role, test and sessionTokens. We use class-validator and class-transformer for this. Because typescript cannot reflect the type of the dto props. So we use class-transformer for resolve this problem.
 We must use @Expose() decorator for the properties that we want to return.
 If property is pointing to another dto, we must use @Type(() => ...) decorator. Otherwise it will return the object.
 ### Pagination class
