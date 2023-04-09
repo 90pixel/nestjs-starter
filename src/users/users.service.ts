@@ -1,26 +1,30 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
+import { Users } from './entities/users.entity';
 import { MoreThan, Repository } from 'typeorm';
 import { LoginDto } from '../auth/dto/login.dto';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto } from '../auth/dto/register.dto';
-import { PagePaginator } from '../common/helpers/page-paginator';
-import { PaginatorResponse } from '../common/helpers/paginator-response.dto';
+import { UtilsService } from '../utils/utils.service';
+import { PaginatorResponse } from '../utils/dto/paginator-response.dto';
+import { MeResponseDto } from './dto/me.response.dto';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User) private usersRepository: Repository<User>,
+    @InjectRepository(Users) private usersRepository: Repository<Users>,
+    @Inject(UtilsService)
+    private readonly utilsService: UtilsService,
   ) {}
 
-  async findOne(username: string): Promise<User> {
+  async findOne(username: string): Promise<Users> {
     return await this.usersRepository.findOne({
       where: { username: username },
+      relations: ['sessionTokens'],
     });
   }
 
-  async checkAuth(loginInfos: LoginDto): Promise<User> {
+  async checkAuth(loginInfos: LoginDto): Promise<Users> {
     const user = await this.usersRepository.findOne({
       where: { username: loginInfos.username },
     });
@@ -32,29 +36,20 @@ export class UsersService {
   }
 
   async paginateAll(): Promise<PaginatorResponse> {
-    //create pagination object
-    const pagination = new PagePaginator();
-    //
-    return await pagination.paginate(
-      //identify your table to use
-      this.usersRepository.createQueryBuilder(),
+    return await this.utilsService.getPagination(
+      Users,
+      { page: 1, limit: 2 },
       {
-        //default is 1
-        page: 1,
-        //default is 10
-        take: 3,
-        //true for asc, false for desc, default is id desc
-        orderBy: { id: false },
-        //you can use typeorm where clause
+        order: { 'users.id': 'DESC' },
         where: { id: MoreThan(0) },
-        //add relations if you want take them too
         relations: ['sessionTokens'],
       },
+      MeResponseDto,
     );
   }
 
-  async create(registerInfo: RegisterDto): Promise<User> {
-    const newUser = new User();
+  async create(registerInfo: RegisterDto): Promise<Users> {
+    const newUser = new Users();
     newUser.username = registerInfo.username;
     newUser.salt = await bcrypt.genSalt();
     newUser.password = await bcrypt.hash(registerInfo.password, newUser.salt);

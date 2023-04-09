@@ -9,9 +9,10 @@ import {
 } from 'typeorm';
 import { Role } from '../../common/enums/role.enum';
 import { SessionToken } from '../../auth/entities/session-token';
+import { Exclude } from 'class-transformer';
 
 @Entity()
-export class User {
+export class Users {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -24,6 +25,7 @@ export class User {
   username: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   @Index()
@@ -45,4 +47,9 @@ export class User {
     cascade: true,
   })
   sessionTokens: SessionToken[];
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  toJSON() {
+    return { ...this, password: undefined };
+  }
 }

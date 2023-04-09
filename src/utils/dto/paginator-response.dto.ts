@@ -2,7 +2,7 @@ export class PaginatorResponse {
   totalCount: number;
   totalPages: number;
   currentPage: number;
-  takeSize: number;
+  pageSize: number;
   hasNext: boolean;
   nodes: [] | any;
 }

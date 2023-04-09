@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { LoginResponseDto } from './dto/login.response.dto';
-import { User } from '../users/entities/user.entity';
+import { Users } from '../users/entities/users.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MoreThan, Repository } from 'typeorm';
 import { SessionToken } from './entities/session-token';
@@ -71,7 +71,7 @@ export class AuthService {
   async register(registerInfo: RegisterDto): Promise<LoginResponseDto> {
     //if user exist
     const user = await this.usersService.findOne(registerInfo.username);
-    if (user) throw new UnauthorizedException('User already exist');
+    if (user) throw new UnauthorizedException('Users already exist');
     const createdUser = await this.usersService.create(registerInfo);
     const payload = {
       sub: createdUser.sub,
@@ -80,7 +80,7 @@ export class AuthService {
     return await this.createToken(createdUser, payload);
   }
 
-  async createToken(user: User, payload: any): Promise<LoginResponseDto> {
+  async createToken(user: Users, payload: any): Promise<LoginResponseDto> {
     const response = new LoginResponseDto();
     response.accessToken = this.jwtService.sign(payload);
     response.refreshToken = await this.generateRefreshToken();
@@ -114,7 +114,7 @@ export class AuthService {
     return crypto.randomBytes(32).toString('hex');
   }
 
-  async validateAccessToken(accessToken: string): Promise<User> {
+  async validateAccessToken(accessToken: string): Promise<Users> {
     try {
       const payload = this.jwtService.verify(accessToken);
       const token = await this.sessionTokenRepository.findOne({

@@ -105,7 +105,7 @@ Sometimes you may not need to return all objects of a data (Ex. password). In su
 use '?' for allow null.
 
 ```typescript
-const result: User = await this.usersRepository.findOne({ where: { id: id } });
+const result: Users = await this.usersRepository.findOne({ where: { id: id } });
 return new MeResponseDto(result);
 ```
 
@@ -134,31 +134,94 @@ be used
 
 More info: https://orkhan.gitbook.io/typeorm/docs/eager-and-lazy-relations#lazy-relations
 
+### Auto Mapper
+Auto mapper can be used to map the response object. You can use it in the following way.
+For example your entity is Users and you want to return MeResponseDto object.
+
+```
+export class Users {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Index()
+  @Column({ nullable: true, default: null })
+  sub: string;
+
+  @Index({ unique: true })
+  @Column()
+  username: string;
+
+  @Column()
+  @Exclude()
+  password: string;
+
+  @Index()
+  @Column({ type: 'enum', enum: Role, default: [Role.User] })
+  role: Role;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @Index()
+  @Column()
+  salt: string;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  //one to many session
+  @OneToMany(() => SessionToken, (sessionToken) => sessionToken.user, {
+    cascade: true,
+  })
+  sessionTokens: SessionToken[];
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  toJSON() {
+    return { ...this, password: undefined };
+  }
+}
+```
+
+```
+export class MeResponseDto {
+  @Expose()
+  id: number;
+  @Expose()
+  username: string;
+  @Expose()
+  role: string;
+  @Expose()
+  test: string;
+
+  @Expose()
+  @Type(() => SessionResponseDto)
+  sessionTokens: SessionResponseDto[];
+}
+```
+```
+await this.utilsService.autoMapper(getUser, MeResponseDto)
+```
+
+Your response will be contains only id, username, role, test and sessionTokens. We use class-validator and class-transformer for this. Because typescript cannot reflect the type of the dto props. So we use class-transformer for resolve this problem.
+We must use @Expose() decorator for the properties that we want to return.
+If property is pointing to another dto, we must use @Type(() => ...) decorator. Otherwise it will return the object.
 ### Pagination class
 
 Pagination works can sometimes be confused. Added pagination class for convenience. You can take a look at the comment
 lines in the example below.
 
 ```
-async paginateAll() {
-    //create pagination object
-    const pagination = new PagePaginator();
-    //
-    return await pagination.paginate(
-        //identify your table to use
-      this.usersRepository.createQueryBuilder(),
+  async paginateAll(): Promise<PaginatorResponse> {
+    return await this.utilsService.getPaginationMapper(
+      Users, // Entity of the which you want to paginate
+      { page: 1, limit: 10 },
       {
-        //default is 1
-        page: 1,
-        //default is 10
-        take: 3,
-        //true for asc, false for desc, default is id desc
-        orderBy: { id: false },
-        //you can use typeorm where clause
-        where: { id: MoreThan(0) },
-        //add relations if you want take them too
-        relations: ['sessionTokens'],
+        order: { 'users.id': 'DESC' }, // Order by should be in this format
+        where: { id: MoreThan(0) }, // typeorm where conditions
+        relations: ['sessionTokens'], // typeorm relations
       },
+      MeResponseDto, // If you want to map the response object, you can use this. should be mapper format like above
+      true, // count all records
     );
   }
 ```

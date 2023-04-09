@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from '../../users/entities/user.entity';
+import { Users } from '../../users/entities/users.entity';
 
 @Entity()
 export class SessionToken {
@@ -33,8 +33,8 @@ export class SessionToken {
   updatedAt: Date;
 
   //one to many user
-  @ManyToOne(() => User, (user) => user.sessionTokens, {
+  @ManyToOne(() => Users, (user) => user.sessionTokens, {
     onDelete: 'CASCADE',
   })
-  user: User;
+  user: Users;
 }

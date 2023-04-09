@@ -1,11 +1,17 @@
-export class MeResponseDto {
-  constructor(payload: any) {
-    this.id = payload?.id;
-    this.username = payload?.username;
-    this.role = payload?.role;
-  }
+import { Expose, Type } from 'class-transformer';
+import { SessionResponseDto } from './session.response.dto';
 
+export class MeResponseDto {
+  @Expose()
   id: number;
+  @Expose()
   username: string;
+  @Expose()
   role: string;
+  @Expose()
+  test: string;
+
+  @Expose()
+  @Type(() => SessionResponseDto)
+  sessionTokens: SessionResponseDto[];
 }
