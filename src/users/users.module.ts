@@ -7,7 +7,10 @@ import { UtilsModule } from '../utils/utils.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Users]), UtilsModule],
-  providers: [UsersService],
+  providers: [
+    UsersService,
+    //UsersSubscriber
+  ],
   exports: [UsersService],
   controllers: [UsersController],
 })

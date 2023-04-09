@@ -21,6 +21,7 @@ starter kit.
 - [x] Response Format
 - [x] Access token, username are indexed for quick access
 - [x] Pagination
+- [x] AutoMapper
 
 ## Installation
 
