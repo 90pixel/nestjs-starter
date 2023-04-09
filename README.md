@@ -100,30 +100,6 @@ Response Example:
 }
 ```
 
-### Mapping response object
-
-Sometimes you may not need to return all objects of a data (Ex. password). In such a case, create a response object and
-use '?' for allow null.
-
-```typescript
-const result: Users = await this.usersRepository.findOne({ where: { id: id } });
-return new MeResponseDto(result);
-```
-
-```typescript
-export class MeResponseDto {
-  constructor(payload: any) {
-    this.id = payload?.id;
-    this.username = payload?.username;
-    this.role = payload?.role;
-  }
-
-  id: number;
-  username: string;
-  role: string;
-}
-```
-
 ### Validations
 
 More info: https://github.com/typestack/class-validator
@@ -139,7 +115,7 @@ More info: https://orkhan.gitbook.io/typeorm/docs/eager-and-lazy-relations#lazy-
 Auto mapper can be used to map the response object. You can use it in the following way.
 For example your entity is Users and you want to return MeResponseDto object.
 
-```
+```typescript
 export class Users {
   @PrimaryGeneratedColumn()
   id: number;
@@ -183,7 +159,7 @@ export class Users {
 }
 ```
 
-```
+```typescript
 export class MeResponseDto {
   @Expose()
   id: number;
@@ -199,7 +175,7 @@ export class MeResponseDto {
   sessionTokens: SessionResponseDto[];
 }
 ```
-```
+```typescript
 await this.utilsService.autoMapper(getUser, MeResponseDto)
 ```
 
@@ -211,7 +187,7 @@ If property is pointing to another dto, we must use @Type(() => ...) decorator. 
 Pagination works can sometimes be confused. Added pagination class for convenience. You can take a look at the comment
 lines in the example below.
 
-```
+```typescript
   async paginateAll(): Promise<PaginatorResponse> {
     return await this.utilsService.getPaginationMapper(
       Users, // Entity of the which you want to paginate
