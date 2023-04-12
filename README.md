@@ -117,12 +117,8 @@ For example your entity is Users and you want to return MeResponseDto object.
 
 ```typescript
 export class Users {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
-
-  @Index()
-  @Column({ nullable: true, default: null })
-  sub: string;
 
   @Index({ unique: true })
   @Column()
@@ -193,7 +189,7 @@ lines in the example below.
       Users, // Entity of the which you want to paginate
       { page: 1, limit: 10 },
       {
-        order: { 'users.id': 'DESC' }, // Order by should be in this format
+        order: { 'users.createdAt': 'DESC' }, // Order by should be in this format
         where: { id: MoreThan(0) }, // typeorm where conditions
         relations: ['sessionTokens'], // typeorm relations
       },

@@ -23,7 +23,7 @@ export class AuthService {
     const user = await this.usersService.checkAuth(loginInfo);
     if (!user) throw new UnauthorizedException('Invalid credentials');
     const payload = {
-      sub: user.sub,
+      id: user.id,
     };
     return await this.createToken(user, payload);
   }
@@ -63,9 +63,9 @@ export class AuthService {
     await this.sessionTokenRepository.save(sessionToken);
 
     const payload = {
-      sub: sessionToken.user.sub,
+      id: sessionToken.user.id,
     };
-    return this.createToken(sessionToken.user, payload);
+    return await this.createToken(sessionToken.user, payload);
   }
 
   async register(registerInfo: RegisterDto): Promise<LoginResponseDto> {
@@ -74,7 +74,7 @@ export class AuthService {
     if (user) throw new UnauthorizedException('Users already exist');
     const createdUser = await this.usersService.create(registerInfo);
     const payload = {
-      sub: createdUser.sub,
+      id: createdUser.id,
     };
 
     return await this.createToken(createdUser, payload);
@@ -123,7 +123,7 @@ export class AuthService {
       });
       if (!token) throw new UnauthorizedException('Invalid access token');
 
-      if (token.user.sub !== payload.sub)
+      if (token.user.id !== payload.id)
         throw new UnauthorizedException('Invalid access token');
       return token.user;
     } catch (e) {

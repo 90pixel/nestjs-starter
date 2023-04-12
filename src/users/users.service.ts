@@ -8,7 +8,6 @@ import { RegisterDto } from '../auth/dto/register.dto';
 import { UtilsService } from '../utils/utils.service';
 import { PaginatorResponse } from '../utils/dto/paginator-response.dto';
 import { MeResponseDto } from './dto/me.response.dto';
-import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UsersService {
@@ -41,7 +40,7 @@ export class UsersService {
       Users,
       { page: 1, limit: 2 },
       {
-        order: { 'users.id': 'DESC' },
+        order: { 'users.createdAt': 'DESC' },
         where: { id: MoreThan(0) },
         relations: ['sessionTokens'],
       },
@@ -54,7 +53,6 @@ export class UsersService {
     newUser.username = registerInfo.username;
     newUser.salt = await bcrypt.genSalt();
     newUser.password = await bcrypt.hash(registerInfo.password, newUser.salt);
-    newUser.sub = uuidv4();
 
     return await this.usersRepository.save(newUser);
   }
