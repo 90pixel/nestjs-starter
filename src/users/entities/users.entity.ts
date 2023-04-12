@@ -17,7 +17,7 @@ export class Users {
   id: number;
 
   @Index()
-  @Column({ nullable: true, default: null })
+  @Column({ unique: true })
   sub: string;
 
   @Index({ unique: true })
@@ -28,14 +28,12 @@ export class Users {
   @Exclude()
   password: string;
 
-  @Index()
   @Column({ type: 'enum', enum: Role, default: [Role.User] })
   role: Role;
 
   @CreateDateColumn()
   createdAt: Date;
 
-  @Index()
   @Column()
   salt: string;
 

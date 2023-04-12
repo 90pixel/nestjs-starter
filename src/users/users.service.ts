@@ -8,6 +8,7 @@ import { RegisterDto } from '../auth/dto/register.dto';
 import { UtilsService } from '../utils/utils.service';
 import { PaginatorResponse } from '../utils/dto/paginator-response.dto';
 import { MeResponseDto } from './dto/me.response.dto';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UsersService {
@@ -53,10 +54,8 @@ export class UsersService {
     newUser.username = registerInfo.username;
     newUser.salt = await bcrypt.genSalt();
     newUser.password = await bcrypt.hash(registerInfo.password, newUser.salt);
-    await this.usersRepository.save(newUser);
+    newUser.sub = uuidv4();
 
-    //sub is the unique identifier of the user timestamp+ userid
-    newUser.sub = newUser.createdAt.getTime() + newUser.id.toString();
     return await this.usersRepository.save(newUser);
   }
 }
