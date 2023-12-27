@@ -12,22 +12,26 @@ import { UsersModule } from './users/users.module';
 import { UtilsModule } from './utils/utils.module';
 
 /**************************************************/
-const nodeEnv = process.env.NODE_ENV || '';
-dotenv.config({ path: `./.env${nodeEnv}` });
+const envFile = process.env.NODE_ENV
+  ? `./.env.${process.env.NODE_ENV}`
+  : './.env';
+dotenv.config({ path: envFile });
 /**************************************************/
 
 console.log('**************************************************');
-console.log('process.env.NODE_ENV', process.env.NODE_ENV);
+console.log('process.env.NODE_ENV:', process.env.NODE_ENV);
 try {
-  fs.readFileSync(`./.env${nodeEnv}`, 'utf8');
+  fs.readFileSync(envFile, 'utf8');
 } catch (e) {
   console.log('ENV:', e.stack);
+  //stop the process if env file is not found
+  process.exit(1);
 }
 console.log('**************************************************');
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: `.env.${process.env.NODE_ENV ?? 'dev'}`,
+      envFilePath: envFile,
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -41,7 +45,7 @@ console.log('**************************************************');
       autoLoadEntities: true,
       keepConnectionAlive: true,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      subscribers: [__dirname + '/**/*.subscriber{.ts,.js}'],
+      //subscribers: [__dirname + '/**/*.subscriber{.ts,.js}'],
       // logging: process.env.NODE_ENV !== 'prod',
     }),
 

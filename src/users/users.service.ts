@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Users } from './entities/users.entity';
+import * as bcrypt from 'bcrypt';
 import { MoreThan, Repository } from 'typeorm';
 import { LoginDto } from '../auth/dto/login.dto';
-import * as bcrypt from 'bcrypt';
 import { RegisterDto } from '../auth/dto/register.dto';
-import { UtilsService } from '../utils/utils.service';
 import { PaginatorResponse } from '../utils/dto/paginator-response.dto';
+import { UtilsService } from '../utils/utils.service';
 import { MeResponseDto } from './dto/me.response.dto';
+import { Users } from './entities/users.entity';
 
 @Injectable()
 export class UsersService {
@@ -55,5 +55,10 @@ export class UsersService {
     newUser.password = await bcrypt.hash(registerInfo.password, newUser.salt);
 
     return await this.usersRepository.save(newUser);
+  }
+
+  //example purpose
+  async beforeUpdate(): Promise<void> {
+    console.log('user before update service');
   }
 }

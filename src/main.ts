@@ -1,12 +1,13 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
 import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { AppModule } from './app.module';
 
+declare const module: any;
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
@@ -46,12 +47,18 @@ async function bootstrap(): Promise<void> {
   app.enableCors();
 
   await app.listen(5656);
+  if (module.hot) {
+    module.hot.accept();
+    module.hot.dispose(() => app.close());
+  }
 }
 
-bootstrap().then(() =>
-  console.log(
-    'Server started ' +
-      new Date().toLocaleString() +
-      ' "http://localhost:5656/api" ',
-  ),
-);
+bootstrap()
+  .then(() =>
+    console.log(
+      'Server started ' +
+        new Date().toLocaleString() +
+        ' "http://localhost:5656/api" ',
+    ),
+  )
+  .catch((err) => console.log(err));

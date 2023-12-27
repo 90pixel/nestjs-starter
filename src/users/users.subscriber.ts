@@ -1,3 +1,5 @@
+import { Injectable } from '@nestjs/common';
+import { InjectDataSource } from '@nestjs/typeorm';
 import {
   DataSource,
   EntitySubscriberInterface,
@@ -5,24 +7,25 @@ import {
   InsertEvent,
 } from 'typeorm';
 import { Users } from './entities/users.entity';
-import { Injectable } from '@nestjs/common';
-import { InjectDataSource } from '@nestjs/typeorm';
+import { UsersService } from './users.service';
 
 @Injectable()
 @EventSubscriber()
 export class UsersSubscriber implements EntitySubscriberInterface<Users> {
-  constructor(@InjectDataSource() readonly dataSource: DataSource) {
+  constructor(
+    @InjectDataSource() readonly dataSource: DataSource,
+    private readonly userService: UsersService,
+  ) {
     dataSource.subscribers.push(this);
   }
-
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   listenTo() {
     return Users;
   }
 
-  //removed deprecated method
+  //example purpose
   async beforeInsert(event: InsertEvent<Users>): Promise<void> {
-    console.log('user before insert subscriber');
+    await this.userService.beforeUpdate();
     console.log(event.entity, 'beforeInsert');
   }
 }
