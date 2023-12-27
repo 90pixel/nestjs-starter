@@ -25,12 +25,12 @@ starter kit.
 
 ## Installation
 
-The project is using the current lts version node.js 18.15.0 and nestjs 9.3.12.
-First of all, if you have nvm, let's make sure you are using version 18.15.0
+The project is using the current lts version node.js 20.10.0 and nestjs 10.3.0.
+First of all, if you have nvm, let's make sure you are using version 20.10.0
 
 ```bash 
-  nvm install 18.15.0
-  nvm use 18.15.0
+  nvm install 20.10.0
+  nvm use 20.10.0
 ```
 
 To install all packages
