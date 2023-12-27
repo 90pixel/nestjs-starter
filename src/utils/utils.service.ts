@@ -81,7 +81,7 @@ export class UtilsService {
         ? data
         : await this.autoMapper<T>(data, toMapObject);
     response.currentPage = page;
-    response.pageSize = limit;
+    response.pageSize = limit > total ? total : limit;
     response.hasNext = total > page * pageOptions.page;
     response.totalPages = Math.ceil(total / limit);
     response.totalCount = total;
