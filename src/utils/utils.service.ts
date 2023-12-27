@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { PaginatorResponse } from './dto/paginator-response.dto';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
+import { DataSource } from 'typeorm';
+import { PaginatorResponse } from './dto/paginator-response.dto';
 
 interface PageOptions {
   page: number;
@@ -24,7 +24,6 @@ export class UtilsService {
     entity: new () => T,
     pageOptions: PageOptions,
     listOptions: ListOptions,
-    count = true,
   ): Promise<{ data: T[]; total: number }> {
     const { page, limit } = pageOptions;
     const { order, where, relations } = listOptions;
@@ -52,30 +51,28 @@ export class UtilsService {
 
     const skip = (page - 1) * limit;
 
-    const [data, total] = await Promise.all([
-      queryBuilder.offset(skip).limit(limit).getMany(),
-      count ? queryBuilder.getCount() : Promise.resolve(undefined),
-    ]);
+    const [data, total] = await queryBuilder
+      .skip(skip)
+      .take(limit)
+      .getManyAndCount();
 
     return { data, total };
   }
 
-  async getPagination<T, U>(
+  async adminPagination<T, U>(
     entity: new () => U,
     pageOptions: PageOptions,
     listOptions: ListOptions,
     toMapObject: new () => T | undefined = undefined,
-    count = true,
   ): Promise<PaginatorResponse> {
     const { page, limit } = pageOptions;
-    const { order, where, relations } = listOptions;
+    //const { order, where, relations } = listOptions;
 
     // eslint-disable-next-line prefer-const
     let { data, total } = await this.getPaginatedData<U>(
       entity,
       pageOptions,
       listOptions,
-      count,
     );
 
     const response = new PaginatorResponse();

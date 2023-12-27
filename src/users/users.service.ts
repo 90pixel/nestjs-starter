@@ -36,7 +36,7 @@ export class UsersService {
   }
 
   async paginateAll(): Promise<PaginatorResponse> {
-    return await this.utilsService.getPagination(
+    return await this.utilsService.adminPagination(
       Users,
       { page: 1, limit: 2 },
       {
