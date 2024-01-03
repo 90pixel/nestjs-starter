@@ -1,14 +1,14 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { LoginDto } from './dto/login.dto';
-import { RegisterDto } from './dto/register.dto';
-import { LoginResponseDto } from './dto/login.response.dto';
-import { Users } from '../users/entities/users.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MoreThan, Repository } from 'typeorm';
-import { SessionToken } from './entities/session-token';
 import * as crypto from 'crypto';
+import { MoreThan, Repository } from 'typeorm';
+import { Users } from '../users/entities/users.entity';
+import { UsersService } from '../users/users.service';
+import { LoginDto } from './dto/login.dto';
+import { LoginResponseDto } from './dto/login.response.dto';
+import { RegisterDto } from './dto/register.dto';
+import { SessionToken } from './entities/session-token';
 
 @Injectable()
 export class AuthService {
@@ -30,12 +30,12 @@ export class AuthService {
 
   async logout(accessToken: string): Promise<void> {
     const sessionToken = await this.sessionTokenRepository.findOne({
-      where: { accessToken: accessToken },
+      where: { access_token: accessToken },
     });
     if (sessionToken) {
       //update expiresAt to now
-      sessionToken.expiresAt = new Date();
-      sessionToken.expiresRefreshAt = new Date();
+      sessionToken.expires_at = new Date();
+      sessionToken.expires_refresh_at = new Date();
       await this.sessionTokenRepository.save(sessionToken);
     }
   }
@@ -46,8 +46,8 @@ export class AuthService {
 
     const sessionToken = await this.sessionTokenRepository.findOne({
       where: {
-        refreshToken: refreshToken,
-        expiresRefreshAt: MoreThan(new Date()),
+        refresh_token: refreshToken,
+        expires_refresh_at: MoreThan(new Date()),
       },
       relations: ['user'],
     });
@@ -57,8 +57,8 @@ export class AuthService {
     }
 
     //update expiresAt to now
-    sessionToken.expiresAt = new Date();
-    sessionToken.expiresRefreshAt = new Date();
+    sessionToken.expires_at = new Date();
+    sessionToken.expires_refresh_at = new Date();
     //update session token
     await this.sessionTokenRepository.save(sessionToken);
 
@@ -82,14 +82,14 @@ export class AuthService {
 
   async createToken(user: Users, payload: any): Promise<LoginResponseDto> {
     const response = new LoginResponseDto();
-    response.accessToken = this.jwtService.sign(payload);
-    response.refreshToken = await this.generateRefreshToken();
+    response.access_token = this.jwtService.sign(payload);
+    response.refresh_token = await this.generateRefreshToken();
     const expiresAt = process.env.JWT_EXPIRES_IN;
 
     //add expiresAt string to Date
     const expiresAtDate = new Date();
     expiresAtDate.setSeconds(expiresAtDate.getSeconds() + parseInt(expiresAt));
-    response.expiresAt = expiresAtDate;
+    response.expires_at = expiresAtDate;
 
     //add expiresRefreshAt string to Date
     const expiresRefreshAt = process.env.JWT_REFRESH_EXPIRES_IN;
@@ -97,14 +97,14 @@ export class AuthService {
     expiresRefreshAtDate.setSeconds(
       expiresRefreshAtDate.getSeconds() + parseInt(expiresRefreshAt),
     );
-    response.expiresRefreshAt = expiresRefreshAtDate;
+    response.expires_refresh_at = expiresRefreshAtDate;
 
     const sessionToken = new SessionToken();
     sessionToken.user = user;
-    sessionToken.accessToken = response.accessToken;
-    sessionToken.expiresAt = response.expiresAt;
-    sessionToken.refreshToken = response.refreshToken;
-    sessionToken.expiresRefreshAt = response.expiresRefreshAt;
+    sessionToken.access_token = response.access_token;
+    sessionToken.expires_at = response.expires_at;
+    sessionToken.refresh_token = response.refresh_token;
+    sessionToken.expires_refresh_at = response.expires_refresh_at;
     await this.sessionTokenRepository.save(sessionToken);
 
     return response;
@@ -118,7 +118,7 @@ export class AuthService {
     try {
       const payload = this.jwtService.verify(accessToken);
       const token = await this.sessionTokenRepository.findOne({
-        where: { accessToken: accessToken, expiresAt: MoreThan(new Date()) },
+        where: { access_token: accessToken, expires_at: MoreThan(new Date()) },
         relations: ['user'],
       });
       if (!token) throw new UnauthorizedException('Invalid access token');

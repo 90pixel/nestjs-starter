@@ -13,5 +13,5 @@ export class MeResponseDto {
 
   @Expose()
   @Type(() => SessionResponseDto)
-  sessionTokens: SessionResponseDto[];
+  session_tokens: SessionResponseDto[];
 }

@@ -1,11 +1,11 @@
 import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { ResponseDto } from '../common/dto/response.dto';
+import { Role } from '../common/enums/role.enum';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { ResponseDto } from '../common/dto/response.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
 import { Roles } from './lib/roles.decorator';
-import { Role } from '../common/enums/role.enum';
 
 @Controller('auth')
 @ApiBearerAuth()
@@ -37,9 +37,9 @@ export class AuthController {
   //get access token
   @Get('getAccessToken/:refreshToken')
   async getAccessToken(
-    @Param('refreshToken') refreshToken: string,
+    @Param('refresh_token') refresh_token: string,
   ): Promise<ResponseDto> {
-    const response = await this.authService.getAccessToken(refreshToken);
+    const response = await this.authService.getAccessToken(refresh_token);
     return new ResponseDto(response, 'Access token retrieved');
   }
 }

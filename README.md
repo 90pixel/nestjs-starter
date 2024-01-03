@@ -28,20 +28,20 @@ starter kit.
 The project is using the current lts version node.js 20.10.0 and nestjs 10.3.0.
 First of all, if you have nvm, let's make sure you are using version 20.10.0
 
-```bash 
+```bash
   nvm install 20.10.0
   nvm use 20.10.0
 ```
 
 To install all packages
 
-```bash 
+```bash
   npm install
 ```
 
 To upgrade all packages to current versions
 
-```bash 
+```bash
   npm update
   npm i -g npm-check-updates && ncu -u && npm i
 ```
@@ -78,11 +78,11 @@ const response = await this.authService.getAccessToken(refreshToken);
 return new ResponseDto(response, 'Access token retrieved');
 ```
 
-``return new ResponseDto(response);`` // returns 'ok' message and statusCode:200
+`return new ResponseDto(response);` // returns 'ok' message and statusCode:200
 
-``return new ResponseDto(response, 'Access token retrieved');`` // returns custom message and statusCode:200
+`return new ResponseDto(response, 'Access token retrieved');` // returns custom message and statusCode:200
 
-``return new ResponseDto(null, 'Access token cannot retrieved', HttpStatus.BAD_REQUEST);`` // returns custom message and
+`return new ResponseDto(null, 'Access token cannot retrieved', HttpStatus.BAD_REQUEST);` // returns custom message and
 statusCode:400
 
 Response Example:
@@ -112,6 +112,7 @@ be used
 More info: https://orkhan.gitbook.io/typeorm/docs/eager-and-lazy-relations#lazy-relations
 
 ### Auto Mapper
+
 Auto mapper can be used to map the response object. You can use it in the following way.
 For example your entity is Users and you want to return MeResponseDto object.
 
@@ -133,20 +134,20 @@ export class Users {
   role: Role;
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @Index()
   @Column()
   salt: string;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 
   //one to many session
   @OneToMany(() => SessionToken, (sessionToken) => sessionToken.user, {
     cascade: true,
   })
-  sessionTokens: SessionToken[];
+  session_tokens: SessionToken[];
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   toJSON() {
@@ -168,16 +169,18 @@ export class MeResponseDto {
 
   @Expose()
   @Type(() => SessionResponseDto)
-  sessionTokens: SessionResponseDto[];
+  session_tokens: SessionResponseDto[];
 }
 ```
+
 ```typescript
-await this.utilsService.autoMapper(getUser, MeResponseDto)
+await this.utilsService.autoMapper(getUser, MeResponseDto);
 ```
 
 Your response will contains only id, username, role, test and sessionTokens. We use class-validator and class-transformer for this. Because typescript cannot reflect the type of the dto props. So we use class-transformer for resolve this problem.
 We must use @Expose() decorator for the properties that we want to return.
 If property is pointing to another dto, we must use @Type(() => ...) decorator. Otherwise it will return the object.
+
 ### Pagination class
 
 Pagination works can sometimes be confused. Added pagination class for convenience. You can take a look at the comment
@@ -191,12 +194,10 @@ lines in the example below.
       {
         order: { 'users.createdAt': 'DESC' }, // Order by should be in this format
         where: { id: MoreThan(0) }, // typeorm where conditions
-        relations: ['sessionTokens'], // typeorm relations
+        relations: ['session_tokens'], // typeorm relations
       },
       MeResponseDto, // If you want to map the response object, you can use this. should be mapper format like above
       true, // count all records
     );
   }
 ```
-
-  

@@ -34,7 +34,7 @@ export class SessionToken {
   updated_at: Date;
 
   //one to many user
-  @ManyToOne(() => Users, (user) => user.sessionTokens, {
+  @ManyToOne(() => Users, (user) => user.session_tokens, {
     onDelete: 'CASCADE',
   })
   user: Users;

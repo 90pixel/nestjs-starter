@@ -20,7 +20,7 @@ export class UsersService {
   async findOne(username: string): Promise<Users> {
     return await this.usersRepository.findOne({
       where: { username: username },
-      relations: ['sessionTokens'],
+      relations: ['session_tokens'],
     });
   }
 
@@ -40,9 +40,9 @@ export class UsersService {
       Users,
       { page: 1, limit: 2 },
       {
-        order: { 'users.createdAt': 'DESC' },
+        order: { 'users.created_at': 'DESC' },
         where: { id: MoreThan(0) },
-        relations: ['sessionTokens'],
+        relations: ['session_tokens'],
       },
       MeResponseDto,
     );

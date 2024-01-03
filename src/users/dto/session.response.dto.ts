@@ -2,8 +2,8 @@ import { Expose } from 'class-transformer';
 
 export class SessionResponseDto {
   @Expose()
-  accessToken: string;
+  access_token: string;
 
   @Expose()
-  expiresAt: Date;
+  expires_at: Date;
 }
