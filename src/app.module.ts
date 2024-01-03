@@ -32,6 +32,7 @@ console.log('**************************************************');
   imports: [
     ConfigModule.forRoot({
       envFilePath: envFile,
+      cache: true,
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',

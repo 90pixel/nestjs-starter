@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
@@ -7,9 +8,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Role } from '../../common/enums/role.enum';
 import { SessionToken } from '../../auth/entities/session-token';
-import { Exclude } from 'class-transformer';
+import { Role } from '../../common/enums/role.enum';
 
 @Entity()
 export class Users {
@@ -29,19 +29,19 @@ export class Users {
   role: Role;
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @Column()
   salt: string;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 
   //one to many session
   @OneToMany(() => SessionToken, (sessionToken) => sessionToken.user, {
     cascade: true,
   })
-  sessionTokens: SessionToken[];
+  session_tokens: SessionToken[];
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   toJSON() {

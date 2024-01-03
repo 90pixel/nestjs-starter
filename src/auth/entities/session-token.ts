@@ -16,21 +16,22 @@ export class SessionToken {
 
   @Index({ unique: true })
   @Column({ length: 500 })
-  accessToken: string;
+  access_token: string;
 
   @Column()
-  expiresAt: Date;
+  expires_at: Date;
 
   @Column()
-  refreshToken: string;
+  refresh_token: string;
 
   @Column()
-  expiresRefreshAt: Date;
+  expires_refresh_at: Date;
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
+
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 
   //one to many user
   @ManyToOne(() => Users, (user) => user.sessionTokens, {
