@@ -1,4 +1,21 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
+  "include": ["src/**/*", "types/**/*"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "test",
+    "**/*spec.ts",
+    ".git",
+    ".github",
+    ".vscode",
+    "coverage",
+    "docs",
+    "examples",
+    "scripts",
+    "templates",
+    "tools",
+    "webpack",
+    ".idea"
+  ]
 }
