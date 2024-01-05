@@ -15,17 +15,19 @@ import { UtilsModule } from './utils/utils.module';
 const envFile = process.env.NODE_ENV
   ? `./.env.${process.env.NODE_ENV}`
   : './.env';
-dotenv.config({ path: envFile });
 /**************************************************/
 
 console.log('**************************************************');
 console.log('process.env.NODE_ENV:', process.env.NODE_ENV);
 try {
   fs.readFileSync(envFile, 'utf8');
+  dotenv.config({ path: envFile });
 } catch (e) {
-  console.log('ENV:', e.stack);
-  //stop the process if env file is not found
-  process.exit(1);
+  console.log('ENV:', envFile, 'not found');
+  //log process env variables
+  console.log(
+    'existing env variables: ' + JSON.stringify(process.env, null, 2),
+  );
 }
 console.log('**************************************************');
 @Module({
