@@ -12,12 +12,7 @@
     "start:debug": "NODE_ENV=local nest start --debug --watch",
     "start:local": "NODE_ENV=local nest build --webpack --webpackPath webpack-hmr.config.js --watch",
     "start:prod": "node dist/main NODE_ENV=prod",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "test": "NODE_ENV=local jest --config ./test/jest-e2e.json"
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
   },
   "dependencies": {
     "@fastify/static": "^7.0.4",
@@ -46,7 +41,6 @@
     "@nestjs/schematics": "^10.1.4",
     "@nestjs/testing": "^10.4.3",
     "@types/bcrypt": "^5.0.2",
-    "@types/jest": "^29.5.13",
     "@types/node": "^22.5.5",
     "@types/passport-jwt": "^4.0.1",
     "@types/passport-local": "^1.0.38",
@@ -60,29 +54,11 @@
     "run-script-webpack-plugin": "^0.2.0",
     "source-map-support": "^0.5.21",
     "supertest": "^7.0.0",
-    "ts-jest": "^29.2.5",
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.6.2",
     "webpack": "^5.94.0",
     "webpack-node-externals": "^3.0.0"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
   }
 }
