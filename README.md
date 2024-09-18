@@ -29,8 +29,8 @@ The project is using the current lts version node.js 20.10.0 and nestjs 10.3.0.
 First of all, if you have nvm, let's make sure you are using version 20.10.0
 
 ```bash
-  nvm install 20.10.0
-  nvm use 20.10.0
+  nvm install 20.17.0
+  nvm use 20.17.0
 ```
 
 To install all packages
@@ -201,3 +201,8 @@ lines in the example below.
     );
   }
 ```
+
+### Testing
+
+If you want use test modules checkout nestjs/testing and use spec.ts files.
+https://docs.nestjs.com/fundamentals/testing
